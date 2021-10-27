@@ -33,7 +33,7 @@ const ServerUp = (PORT, message= 'The server is ready') =>{
 
     server.use(express.json());
     server.use(express.urlencoded({extended: false}));
-    server.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+    server.use('/v1/documentation', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
     server.use(helmet());
 
     /////////////////////////////////////////////////////////////
