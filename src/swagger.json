@@ -1,0 +1,1160 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Una API para gestionar los usuarios, pedidos y productos de Delilah Restó",
+    "version": "2.0.0",
+    "title": "Delilah Restó - Sprint #2",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "nicolax0416@gmail.com"
+    }
+  },"tags": [
+    {
+      "name": "usuarios",
+      "description": "Todos los endpoints relacionados con el usuario."
+    },
+    {
+      "name": "admins",
+      "description": "Todos los endpoints en la cual solo tiene acceso el Admins."
+    },
+    {
+      "name": "agendas",
+      "description": "Todos los endpoints relacionados con la Agenda/Direcciones del usuario."
+    },
+    {
+      "name": "mediosDePago",
+      "description": "Todos los endpoints relacionados con los medios de pagos disponibles."
+    },
+    {
+      "name": "productos",
+      "description": "Todos los endpoints relacionados con los productos disponibles."
+    },{
+      "name": "pedidos",
+      "description": "Todos los endpoints relacionados con los pedidos."
+    }
+    
+  ],
+  "schemes": ["http"],
+  "paths": {
+    "/api/v1/usuarios/admins": {
+      "get": {
+        "tags": ["admins"],
+        "summary": "Obtener todos los usuarios. Solo Admins",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder mostrar todos los usuarios disponibles en el sistema.",
+        "parameters": [{
+          "name": "authentication",
+          "in": "header",
+          "description": "authentication generado en /api/v1/login",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/usuarios/login": {
+      "post": {
+        "tags": ["usuarios"],
+        "summary": "Obtener el token de authentication",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder el token de authentication",
+        "parameters": [{
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios. Puedes cambiar el ingreso de username por el de email",
+            "required": true,
+            "schema": {
+              "example": {
+                "username": "admins",
+                "password": "admins"
+              }
+            }
+          }],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/usuarios/signin": {
+      "post": {
+        "tags": ["usuarios"],
+        "summary": "Registrar el usuario en el sistema",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder registrar el usuario en el sistema",
+        "parameters": [{
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios.",
+            "required": true,
+            "schema": {
+              "example": {
+                "username": "nikyuyo",
+                "name": "Nicolas Palermo",
+                "email": "nikyuyo3@gmail.com",
+                "mobile": "11-22544572",
+                "address": "CABA, Flores, Bolivia 470, 28",
+                "password": "nikyuyo"
+              }
+            }
+          }],
+        "responses": {
+          "201": {
+            "description": "Operación correcta"
+          },
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/usuarios/admins/disabled/{userId}": {
+      "put": {
+        "tags": ["admins"],
+        "summary": "Permite suspender a los usuarios. Solo Admins",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder suspende a los usuarios. Los usuarios suspendidos estarán limitados en ciertas acciones",
+        "parameters": [
+          {
+          "name": "authentication",
+          "in": "header",
+          "description": "authentication generado en /api/v1/login",
+          "required": true,
+          "type": "string"
+        },{
+          "name": "userId",
+          "in": "path",
+          "description": "El id del usuario que quiere suspender",
+          "required": true,
+          "type": "number"
+        },{
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios.",
+            "required": true,
+            "schema": {
+              "example": {
+                "disabled": true 
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Credenciales Invalidas o expiración del Token"
+          },
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/usuarios/{userId}": {
+      "delete": {
+        "tags": ["admins"],
+        "summary": "Permite eliminar a un usuario. Solo Admins",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder eliminar del sistema un usuario",
+        "parameters": [
+          {
+          "name": "authentication",
+          "in": "header",
+          "description": "authentication generado en /api/v1/login",
+          "required": true,
+          "type": "string"
+        },{
+          "name": "userId",
+          "in": "path",
+          "description": "El id del usuario que quiere eliminar",
+          "required": true,
+          "type": "number"
+        }],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Credenciales Invalidas o expiración del Token"
+          },
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/usuarios": {
+      "get": {
+        "tags": ["usuarios"],
+        "summary": "Obtener los datos de tu usuario",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder mostrar los datos de tu usuario.",
+        "parameters": [{
+          "name": "authentication",
+          "in": "header",
+          "description": "authentication generado en /api/v1/login",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      },
+      "put": {
+        "tags": ["usuarios"],
+        "summary": "Permite modificar atributos del usuario",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder modificar algunos atributos del usuario que consuma esta llamada",
+        "parameters": [
+          {
+          "name": "authentication",
+          "in": "header",
+          "description": "authentication generado en /api/v1/login",
+          "required": true,
+          "type": "string"
+        },{
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios.",
+            "required": true,
+            "schema": {
+              "example": {
+                "name": "Nicole Palermo",
+                "mobile": "113344553333"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Credenciales Invalidas o expiración del Token"
+          },
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/agendas/admins": {
+      "get": {
+        "tags": ["admins"],
+        "summary": "Obtener todas las direciones. Solo el Admins",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder mostrar todos las direcciones disponibles. Solo el Admins puede acceder a él",
+        "parameters": [{
+          "name": "authentication",
+          "in": "header",
+          "description": "authentication generado en /api/v1/login",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/productos": {
+      "get": {
+        "tags": ["productos"],
+        "summary": "Obtener los productos",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder mostrar todos los productos disponibles.",
+        "parameters": [{
+          "name": "authentication",
+          "in": "header",
+          "description": "authentication generado en /api/v1/login",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      },
+      "post": {
+        "tags": ["admins"],
+        "summary": "Crear un nuevo producto. Solo Admins",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder crear un nuevo prodcuto. Solo el Admins puede acceder a él",
+        "parameters": [{
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios",
+            "required": true,
+            "schema": {
+              "example": {
+                "name": "Hamburguesa Super",
+                "description": " Hamburguesa de 150gr de carne, guacamole, cilandro, tomate, wasabi, lechuga romana",
+                "picture": "https://live.staticflickr.com/3406/3410455398_6a8829d9fc_b.jpg",
+                "price": 750
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+      
+    },
+    "/api/v1/productos/{id}":{
+      "put": {
+        "tags":["admins"],
+        "summary": "Actualiza un producto. Solo Admins",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder actualizar un producto. Solo el Admins puede acceder a él",
+        "parameters": [{
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "El id del producto que se quiere actualizar",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios",
+            "required": true,
+            "schema": {
+              "example": {
+                "name": "Hamburguesa Super 2",
+                "description": " Hamburguesa de 150gr de carne y guacamole",
+                "picture": "https://live.staticflickr.com/3406/3410455398_6a8829d9fc_b.jpg",
+                "price": 500
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["admins"],
+        "summary": "Elimina un producto. Solo admins",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder eliminar un producto. Solo el Admins puede acceder a él",
+        "parameters": [{
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "El id del producto que se quiere eliminar",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/mediosDePago": {
+      "get": {
+        "tags": ["mediosDePago"],
+        "summary": "Obtener los medios de pagos",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder mostrar todos los medios de pago disponibles.",
+        "parameters": [{
+          "name": "authentication",
+          "in": "header",
+          "description": "authentication generado en /api/v1/login",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      },
+      "post": {
+        "tags": ["admins"],
+        "summary": "Crear un nuevo medio de pago. Solo Admins",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder crear un nuevo medio de pago. Solo el Admins puede acceder a él",
+        "parameters": [{
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios",
+            "required": true,
+            "schema": {
+              "example": {
+                "name": "Fiado"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "403":{
+            "description": "Operación Prohibida"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/mediosDePago/{id}":{
+      "put": {
+        "tags": ["admins"],
+        "summary": "Actualiza un medio de pago. Solo Admins",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder actualizar un medio de pago. Solo el Admins puede acceder a él",
+        "parameters": [{
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "El id del metodo de pago que se quiere actualizar",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios",
+            "required": true,
+            "schema": {
+              "example": {
+                "name": "Fiado"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "403":{
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["admins"],
+        "summary": "Elimina un medio de pago. Solo Admins",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder eliminar un medio de pago. Solo el Admins puede acceder a él",
+        "parameters": [{
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "El id del metodo de pago que se quiere eliminar",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/agendas": {
+      "get": {
+        "tags": ["agendas"],
+        "summary": "Obtener todas las direciones del usuario",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder mostrar todos las direcciones disponibles del usuario",
+        "parameters": [{
+          "name": "authentication",
+          "in": "header",
+          "description": "authentication generado en /api/v1/login",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          }, 
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      },
+      "post": {
+        "tags": ["agendas"],
+        "summary": "Crear una nueva dirección",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder crear una nueva dirección",
+        "parameters": [{
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios",
+            "required": true,
+            "schema": {
+              "example": {
+                "address": "Argentina, CABA, Flores, Bolivia 450"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "403":{
+            "description": "Operación Prohibida"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+      
+    },
+    "/api/v1/agendas/{addressId}": {
+      "put": {
+        "tags": ["agendas"],
+        "summary": "Actualiza una dirección",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder actualizar una dirección.",
+        "parameters": [{
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "El id de la dirección quee quiere actualizar",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios",
+            "required": true,
+            "schema": {
+              "example": {
+                "address": "Argentina, CABA, Palermo, Santa Fe, Bonpland 540, 2A"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["agendas"],
+        "summary": "Elimina una dirección",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder eliminar una dirección.",
+        "parameters": [{
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "El id de la dirección que se quiere eliminar",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+      
+    },
+    "/api/v1/pedidos": {
+      "get": {
+        "tags": ["pedidos"],
+        "summary": "Obtener todos los pedidos hechos por el usuario",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder mostrar todos los pedidos realizados por el usuario",
+        "parameters": [{
+          "name": "authentication",
+          "in": "header",
+          "description": "authentication generado en /api/v1/login",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      },
+      "post": {
+        "tags": ["pedidos"],
+        "summary": "Crear un nuevo pedido",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder crear un nuevo pedido",
+        "parameters": [{
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios",
+            "required": true,
+            "schema": {
+              "example": {
+                "addressId": 1,
+                "paymentMethodId": 1,
+                "products":[{
+                    "productId": 4,
+                    "quantity": 1
+                },{
+                    "productId": 2,
+                    "quantity": 1
+                }]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Operación correcta"
+          },
+          "400": {
+            "description": "Petición Mala"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra la dirección/producto/metodo de pago"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/pedidos/admins": {
+      "get": {
+        "tags": ["admins"],
+        "summary": "Obtener todos los pedidos realizados en la aplicación. Solo el Admins",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder mostrar todos los pedidos existentes. Solo el Admins puede acceder a él",
+        "parameters": [{
+          "name": "authentication",
+          "in": "header",
+          "description": "authentication generado en /api/v1/login",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/pedidos/state/{orderId}": {
+      "put": {
+        "tags": ["admins"],
+        "summary": "Actualizar el state del pedido. Solo Admins",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder actualizar el state del pedido. Si el state del pedido es diferente a \"Processing\" . Dicho pedido se interpretará como un pedido cerrado, es decir el usuario no podrá modificarlo",
+        "parameters": [{
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },{
+            "name": "orderId",
+            "in": "path",
+            "description": "El id del pedido",
+            "required": true,
+            "type": "number"
+            },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios",
+            "required": true,
+            "schema": {
+              "example": {
+                "state": "Completado"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },  
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra la dirección/producto/pedido"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    },
+    "/api/v1/pedidos/{orderId}": {
+      "get": {
+        "tags": ["pedidos"],
+        "summary": "Obtener un pedido",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder mostrar el detalle de la orden realizada",
+        "parameters": [
+          {
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },{
+            "name": "orderId",
+            "in": "path",
+            "description": "El id del pedido",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },  
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra la orden"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      },
+      "put": {
+        "tags": ["pedidos"],
+        "summary": "Actualizar nuevo pedido",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder actualizar un pedido",
+        "parameters": [{
+            "name": "authentication",
+            "in": "header",
+            "description": "authentication generado en /api/v1/login",
+            "required": true,
+            "type": "string"
+          },{
+            "name": "orderId",
+            "in": "path",
+            "description": "El id del pedido",
+            "required": true,
+            "type": "number"
+            },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Todos los atributos del body son obligatorios",
+            "required": true,
+            "schema": {
+              "example": {
+                "addressId": 1,
+                "paymentMethodId": 1,
+                "products":[{
+                    "productId": 4,
+                    "quantity": 1
+                },{
+                    "productId": 2,
+                    "quantity": 1
+                }]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "400": {
+            "description": "Petición Mala"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },  
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra la pedido/dirección/producto/pedido"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["pedidos"],
+        "summary": "Eliminar un pedido",
+        "produces": ["application/json"],
+        "description": "Endpoint para poder eliminar un pedido",
+        "parameters": [
+          {
+          "name": "authentication",
+          "in": "header",
+          "description": "authentication generado en /api/v1/login",
+          "required": true,
+          "type": "string"
+          },{
+          "name": "orderId",
+          "in": "path",
+          "description": "El id de la orden que quiere ver",
+          "required": true,
+          "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación correcta"
+          },
+          "401": {
+            "description": "Acceso Denegado"
+          },  
+          "403": {
+            "description": "Operación Prohibida"
+          },
+          "404": {
+            "description": "No se encuentra la orden"
+          },
+          "406":{
+            "description": "Se requiere el Header authentication"
+          },
+          "500": {
+            "description": "Error"
+          }
+        }
+      }
+    }
+  }
+}
