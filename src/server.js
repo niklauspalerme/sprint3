@@ -39,11 +39,11 @@ const ServerUp = (PORT, message= 'The server is ready') =>{
     /////////////////////////////////////////////////////////////
     // Routers
 
-    server.use('/api/v1/agendas', agendaRouter());
-    server.use('/api/v1/mediosDePago', paymentMethodRouter());
-    server.use('/api/v1/productos', productRouter());
-    server.use('/api/v1/usuarios', userRouter());
-    server.use('/api/v1/pedidos', orderRouter());
+    server.use('/v1/agendas', agendaRouter());
+    server.use('/v1/mediosDePago', paymentMethodRouter());
+    server.use('/v1/productos', productRouter());
+    server.use('/v1/usuarios', userRouter());
+    server.use('/v1/pedidos', orderRouter());
 
     /////////////////////////////////////////////////////////////
     //Puerto
